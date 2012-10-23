@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" android:background="@color/azul_2" android:addStatesFromChildren="true" android:shrinkColumns="*"  
+    android:stretchColumns="*">
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/scan" android:id="@+id/btnScanCode" android:layout_weight="0.1"></Button>
+    <TableRow android:id="@+id/tableHeader" android:layout_width="wrap_content" android:layout_height="fill_parent"  android:gravity="center_horizontal" android:layout_weight="0.1">
+        <TextView android:layout_width="wrap_content" android:layout_height="fill_parent" android:id="@+id/textView1" style="@style/CodeFont" android:text="@string/product"></TextView>
+        <TextView android:text="@string/price_u" android:id="@+id/textView2" android:layout_width="wrap_content" android:layout_height="fill_parent" style="@style/CodeFont"></TextView>
+        <TextView android:text="@string/qty" android:id="@+id/textView3" android:layout_width="wrap_content" android:layout_height="fill_parent" style="@style/CodeFont"></TextView>
+    </TableRow>
+    <TableRow android:id="@+id/tableRowTest" android:layout_width="wrap_content" android:layout_height="fill_parent">
+        <TextView android:id="@+id/textProd" android:layout_width="wrap_content" android:layout_height="fill_parent" style="@style/ProductFont" android:text=""></TextView>
+        <TextView android:id="@+id/textPrice" android:layout_width="wrap_content" android:layout_height="fill_parent" style="@style/ProductFont"></TextView>
+        <EditText android:id="@+id/editQty" android:layout_height="wrap_content"  android:inputType="number" android:text="1"> </EditText>
+    </TableRow>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/add_cart" android:id="@+id/btn_addToCart" android:layout_weight="0.1"></Button>
+    <Button android:text="@string/view_cart" android:id="@+id/btnViewCart" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="0.1"></Button>
+</TableLayout>
