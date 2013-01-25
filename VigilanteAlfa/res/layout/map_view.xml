@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" >
+    
+        <com.google.android.maps.MapView
+        	android:id="@+id/mapview"
+        	android:layout_width="fill_parent"
+        	android:layout_height="fill_parent"
+        	android:apiKey="0q3AMnKoYxDnTWBGjXTZ6TAShcNedkhQR7Hlv2Q"
+        	android:clickable="true" />
+
+        <Button
+            android:id="@+id/report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:onClick="onClickButtons"
+            android:text="@string/report" />
+
+        <Button
+            android:id="@+id/checkIn"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:onClick="onClickButtons"
+            android:text="-" />
+
+        <ToggleButton
+            android:id="@+id/viewZones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/checkIn"
+            android:text="ViewZones" />
+
+    </RelativeLayout>
+</FrameLayout>
