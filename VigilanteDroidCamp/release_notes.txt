@@ -1,4 +1,0 @@
-Release Notes
-
--Scanea codigos con la libreria zxing (Scan.java)
--Invoca Web Service con la libreria ksoap2 ( Scan.java - call())
