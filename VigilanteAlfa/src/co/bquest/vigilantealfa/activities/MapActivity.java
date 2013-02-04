@@ -18,9 +18,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import co.bquest.vigilantealfa.R;
@@ -31,6 +34,7 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.google.android.maps.OverlayItem;
 import com.quickblox.core.QBCallbackImpl;
 import com.quickblox.core.result.Result;
 import com.quickblox.module.locations.QBLocations;
@@ -57,13 +61,22 @@ public class MapActivity extends com.google.android.maps.MapActivity {
     private Drawable marker;
     private WhereAmI ownOverlay;
     private Location lastLocation;
+    private OverlayItem inDrag=null;
+    private ImageView dragImage=null;
+    private int xDragImageOffset=0;
+    private int yDragImageOffset=0;
+    private int xDragTouchOffset=0;
+    private int yDragTouchOffset=0;
+    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_view);
 
-        
+        dragImage=(ImageView)findViewById(R.id.drag);
+        xDragImageOffset=dragImage.getDrawable().getIntrinsicWidth()/2;
+        yDragImageOffset=dragImage.getDrawable().getIntrinsicHeight();
         
         // Init Map
         initMapView();
@@ -396,5 +409,86 @@ public class MapActivity extends com.google.android.maps.MapActivity {
 
             return true;
         }
+        
+        /**
+         * Took from http://stackoverflow.com/questions/5866588/itemizedovarlay-hittest
+         * @param overlayItem
+         * @param drawable
+         * @param x
+         * @param y
+         * @return
+         */
+        protected boolean hitTest(Drawable drawable, int x, int y) {
+            Rect bounds = drawable.getBounds();
+            int newLeft = (int) (200 * ((double)bounds.left / (double)bounds.width())  ) ;
+            int newTop = (int) (200 * ((double)bounds.top  / (double)bounds.height()) );
+            Rect square = new Rect(newLeft, newTop, 200, 200);
+            return square.contains(x, y);
+        }
+        
+        @Override
+        public boolean onTouchEvent(MotionEvent event, MapView mapView) {
+          final int action=event.getAction();
+          final int x=(int)event.getX();
+          final int y=(int)event.getY();
+          boolean result=false;
+          
+          if (action==MotionEvent.ACTION_DOWN) {
+              Point p=new Point(0,0);
+              
+              mapView.getProjection().toPixels(this.getMyLocation(), p);
+              
+              if (hitTest(marker, x-p.x, y-p.y)) {
+                result=true;
+//                inDrag.setMarker(markerRect. );
+                /*inDrag=item;
+                items.remove(inDrag);
+                populate();*/
+
+                xDragTouchOffset=0;
+                yDragTouchOffset=0;
+                
+                setDragImagePosition(p.x, p.y);
+                dragImage.setVisibility(View.VISIBLE);
+
+                xDragTouchOffset=x-p.x;
+                yDragTouchOffset=y-p.y;
+                
+                
+              }
+            
+          }
+          else if (action==MotionEvent.ACTION_MOVE && inDrag!=null) {
+            setDragImagePosition(x, y);
+            result=true;
+          }
+          else if (action==MotionEvent.ACTION_UP && inDrag!=null) {
+            dragImage.setVisibility(View.GONE);
+            
+            GeoPoint pt=mapView.getProjection().fromPixels(x-xDragTouchOffset,
+                                                       y-yDragTouchOffset);
+            OverlayItem toDrop=new OverlayItem(pt, inDrag.getTitle(),
+                                               inDrag.getSnippet());
+            
+            /*items.add(toDrop);
+            populate();*/
+            
+            inDrag=null;
+            result=true;
+          }
+          
+          return(result || super.onTouchEvent(event, mapView));
+        }
+        
+        private void setDragImagePosition(int x, int y) {
+          RelativeLayout.LayoutParams lp=
+            (RelativeLayout.LayoutParams)dragImage.getLayoutParams();
+                
+          lp.setMargins(x-xDragImageOffset-xDragTouchOffset,
+                          y-yDragImageOffset-yDragTouchOffset, 0, 0);
+          dragImage.setLayoutParams(lp);
+        }
+        
+       
     }
 }
